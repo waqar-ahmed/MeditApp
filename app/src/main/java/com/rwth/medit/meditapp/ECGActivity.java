@@ -1,23 +1,25 @@
 package com.rwth.medit.meditapp;
 
+import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.os.Handler;
+import android.preference.PreferenceManager;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
-
 
 import com.jakewharton.threetenabp.AndroidThreeTen;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.helper.DateAsXAxisLabelFormatter;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
-
-import com.loopj.android.http.*;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -45,6 +47,8 @@ public class ECGActivity extends AppCompatActivity {
     GraphView graph;
     Map<String, String> mapparams;
     TextView tvheartRate;
+    SharedPreferences prefs;
+    private String serverIP = "";
 
 
     @Override
@@ -54,6 +58,8 @@ public class ECGActivity extends AppCompatActivity {
         AndroidThreeTen.init(this);
         graph = (GraphView) findViewById(R.id.graph);
         tvheartRate = (TextView) findViewById(R.id.tv_heart_rate);
+
+        prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
         params = new RequestParams();
         params.put("db", "medit");
@@ -96,11 +102,14 @@ public class ECGActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
+
+        serverIP = prefs.getString("server_ip", "");
+
         mTimer1 = new Runnable() {
             @Override
             public void run() {
 
-                client.get("http://134.61.177.247:8086/query", params, new JsonHttpResponseHandler(){
+                client.get("http://" + serverIP + ":8086/query", params, new JsonHttpResponseHandler(){
 
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
