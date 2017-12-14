@@ -1,5 +1,7 @@
 package com.rwth.medit.meditapp;
 
+import android.content.Intent;
+import android.support.annotation.MainThread;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -47,6 +49,9 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onButtonClickAnimationEnd(@NonNull CircleMenuView view, int index) {
                 Log.d("D", "onButtonClickAnimationEnd| index: " + index);
+
+                Intent i = new Intent(HomeActivity.this, ECGActivity.class);
+                HomeActivity.this.startActivity(i);
             }
         });
     }

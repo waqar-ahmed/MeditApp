@@ -399,8 +399,8 @@ public class CircleMenuView extends FrameLayout implements View.OnClickListener 
                     }
                 }
 
-                mRingView.setScaleX(1f);
-                mRingView.setScaleY(1f);
+                mRingView.setScaleX(1.5f);
+                mRingView.setScaleY(1.5f);
                 mRingView.setVisibility(View.VISIBLE);
             }
             @Override
