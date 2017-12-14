@@ -31,4 +31,5 @@ dependencies {
     compile 'com.jjoe64:graphview:4.2.1'
     compile 'com.loopj.android:android-async-http:1.4.9'
     compile 'com.jakewharton.threetenabp:threetenabp:1.0.5'
+    compile 'com.ramotion.circlemenu:circle-menu:0.2.1'
 }

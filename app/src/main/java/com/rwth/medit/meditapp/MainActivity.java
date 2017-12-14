@@ -1,6 +1,8 @@
 package com.rwth.medit.meditapp;
 
-import android.os.AsyncTask;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -21,31 +23,14 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.threeten.bp.Instant;
-import org.threeten.bp.temporal.Temporal;
-import org.threeten.bp.temporal.TemporalField;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.*;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
 import java.util.Map;
-import java.util.Random;
-import java.util.TimeZone;
 
 import cz.msebera.android.httpclient.Header;
-import cz.msebera.android.httpclient.HttpResponse;
-import cz.msebera.android.httpclient.HttpStatus;
-import cz.msebera.android.httpclient.StatusLine;
-import cz.msebera.android.httpclient.client.ClientProtocolException;
-import cz.msebera.android.httpclient.client.HttpClient;
-import cz.msebera.android.httpclient.impl.client.DefaultHttpClient;
-import cz.msebera.android.httpclient.util.EntityUtils;
+import helper.CustomDataPoint;
+import helper.CustomDataPointInterface;
+import helper.CustomPointsGraphSeries;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -53,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
     private Handler mHandler = new Handler();
     private Runnable mTimer1;
     private LineGraphSeries<DataPoint> mSeries1;
+    private CustomPointsGraphSeries<CustomDataPoint> annotations;
     private AsyncHttpClient client;
     private RequestParams params;
     DataPoint[] dataPoints = null;
@@ -80,7 +66,20 @@ public class MainActivity extends AppCompatActivity {
         client.setTimeout(20000);
 
         mSeries1 = new LineGraphSeries<>();
+        annotations = new CustomPointsGraphSeries<>();
+
         graph.addSeries(mSeries1);
+        graph.addSeries(annotations);
+
+        annotations.setColor(Color.RED);
+        annotations.setCustomShape(new CustomPointsGraphSeries.CustomShape() {
+            @Override
+            public void draw(Canvas canvas, Paint paint, float x, float y, CustomDataPointInterface dataPoint) {
+                paint.setStrokeWidth(15);
+                paint.setTextSize(20);
+                canvas.drawText(dataPoint.getLabel(), x, y + 0.3f, paint);
+            }
+        });
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss");
         // set date label formatter
@@ -106,10 +105,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                         // called when response HTTP status is "200 OK"
-                        //Log.d("header", headers[0].toString());
-                        //Log.d("JSON Data", response.toString());
-                        DataPoint[] dp = processJson(response);
-                        if(dp != null) mSeries1.resetData(dp);
+                        processJson(response);
                     }
 
                     @Override
@@ -143,8 +139,10 @@ public class MainActivity extends AppCompatActivity {
         super.onPause();
     }
 
-    private DataPoint[] processJson(JSONObject response) {
+    private void processJson(JSONObject response) {
         DataPoint[] points = null;
+        CustomDataPoint[] ann = null;
+        int annIndex = 0;
         try {
             JSONObject series = response.getJSONArray("results").getJSONObject(0).getJSONArray("series").getJSONObject(0);
             JSONArray columns = series.getJSONArray("columns");
@@ -152,6 +150,8 @@ public class MainActivity extends AppCompatActivity {
 
             int len = values.length();
             points = new DataPoint[len];
+            ann = new CustomDataPoint[countAnnotations(values)];
+
             Log.d("Columns", columns.toString());
 
            // Log.d("length", "" + values.length());
@@ -170,12 +170,17 @@ public class MainActivity extends AppCompatActivity {
                 //Log.d("nano Seconds", "" + instant.getNano());
                 //Log.d("EPOCH Seconds", "" + instant.getEpochSecond());
                 //Log.d("Converted Seconds", "" + instant.getEpochSecond() + instant.getNano()/1000000);
+                if(x.getString(1) != "null"){
+                    CustomDataPoint cp = new CustomDataPoint(instant.toEpochMilli(), x.getDouble(7), x.getString(1));
+                    ann[annIndex] = cp;
+                    annIndex++;
+                }
                 if(x.getString(2) != "null") tvheartRate.setText(x.getString(2));
                 DataPoint v = new DataPoint(instant.toEpochMilli(), x.getDouble(7));
                 points[i] = v;
             }
 
-            String s = "60 ❤ BPM";
+            //String s = "60 ❤ BPM";
 
             graph.getViewport().setMinX(points[0].getX());
             graph.getViewport().setMaxX(points[len-1].getX());
@@ -185,7 +190,22 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
             Toast.makeText(MainActivity.this, e.getMessage() + ". Make sure the device and database is running.", Toast.LENGTH_SHORT).show();
         }
-        return points;
+        if(points != null){
+            mSeries1.resetData(points);
+            annotations.resetData(ann);
+        }
+    }
+
+    private int countAnnotations(JSONArray values) {
+        int count = 0;
+        for(int i=0; i < values.length(); i++) {
+            try {
+                if (values.getJSONArray(i).getString(1) != "null") count++;
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return count;
     }
 }
 
