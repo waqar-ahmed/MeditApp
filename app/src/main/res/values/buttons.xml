@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <array name="icons">
+    <item>@drawable/ecg_64</item>
+    <item>@drawable/ppg_2</item>
+    <item>@drawable/mi_3</item>
+    <item>@drawable/bcg</item>
+    <item>@drawable/camera_1</item>
+  </array>
+  <array name="colors">
+    <item>@android:color/holo_orange_light</item>
+    <item>@android:color/holo_green_dark</item>
+    <item>@android:color/holo_red_light</item>
+    <item>@android:color/holo_purple</item>
+    <item>@android:color/holo_blue_light</item>
+  </array>
+</resources>
