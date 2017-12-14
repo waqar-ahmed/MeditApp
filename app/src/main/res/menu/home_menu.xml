@@ -4,7 +4,7 @@
     <!-- Settings, should always be in the overflow -->
     <item android:id="@+id/action_settings"
         android:title="Settings"
-        android:icon="@drawable/ic_settings_white_24dp"
+        android:icon="@drawable/settings_icon"
         app:showAsAction="always"
 
         />
