@@ -32,7 +32,7 @@ import helper.CustomDataPoint;
 import helper.CustomDataPointInterface;
 import helper.CustomPointsGraphSeries;
 
-public class MainActivity extends AppCompatActivity {
+public class ECGActivity extends AppCompatActivity {
 
 
     private Handler mHandler = new Handler();
@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss");
         // set date label formatter
-        graph.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(MainActivity.this, simpleDateFormat));
+        graph.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(ECGActivity.this, simpleDateFormat));
         graph.getGridLabelRenderer().setNumHorizontalLabels(3); // only 4 because of the space
 
 
@@ -119,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
                     public void onFailure(int statusCode, Header[] headers, Throwable t, JSONObject response) {
                         // called when response HTTP status is "200 OK"
                         Log.d("Throable", "" + t);
-                        Toast.makeText(MainActivity.this, "Error retreiving data. Make sure you are connected to internet.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ECGActivity.this, "Error retreiving data. Make sure you are connected to internet.", Toast.LENGTH_SHORT).show();
                     }
                 });
 
@@ -188,7 +188,7 @@ public class MainActivity extends AppCompatActivity {
 
         } catch (JSONException e) {
             e.printStackTrace();
-            Toast.makeText(MainActivity.this, e.getMessage() + ". Make sure the device and database is running.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(ECGActivity.this, e.getMessage() + ". Make sure the device and database is running.", Toast.LENGTH_SHORT).show();
         }
         if(points != null){
             mSeries1.resetData(points);

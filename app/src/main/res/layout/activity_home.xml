@@ -6,4 +6,18 @@
     android:layout_height="match_parent"
     tools:context="com.rwth.medit.meditapp.HomeActivity">
 
+    <helper.ramotion.CircleMenuView
+        android:id="@+id/circle_menu"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:button_colors="@array/colors"
+        app:button_icons="@array/icons"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+
+
+
 </android.support.constraint.ConstraintLayout>
