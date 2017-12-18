@@ -19,6 +19,7 @@ public class HomeActivity extends AppCompatActivity {
 
     private String serverIP = "";
     SharedPreferences prefs;
+    Class[] classes = new Class[]{ECGActivity.class, PPGActivity.class};
 
 
     @Override
@@ -69,8 +70,8 @@ public class HomeActivity extends AppCompatActivity {
                     Toast.makeText(HomeActivity.this, "Please enter Server IP in settings.", Toast.LENGTH_LONG).show();
                     return;
                 }
-
-                Intent i = new Intent(HomeActivity.this, ECGActivity.class);
+                if(index >= classes.length) return;
+                Intent i = new Intent(HomeActivity.this, classes[index]);
                 HomeActivity.this.startActivity(i);
             }
         });

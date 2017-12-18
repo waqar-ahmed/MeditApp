@@ -14,4 +14,11 @@
     <item>@android:color/holo_purple</item>
     <item>@android:color/holo_blue_light</item>
   </array>
+  <string-array name="tooltips">
+    <item>ECG</item>
+    <item>PPG</item>
+    <item>MI</item>
+    <item>BCG</item>
+    <item>Camera</item>
+  </string-array>
 </resources>

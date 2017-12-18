@@ -24,6 +24,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.OvershootInterpolator;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import com.rwth.medit.meditapp.R;
 
@@ -301,10 +302,14 @@ public class CircleMenuView extends FrameLayout implements View.OnClickListener 
                 animation.start();
             }
         });
+
+        mMenuButton.setScaleX(1.5f);
+        mMenuButton.setScaleY(1.5f);
     }
 
-    private void initButtons(@NonNull Context context, @NonNull List<Integer> icons, @NonNull List<Integer> colors) {
+    private void initButtons(@NonNull final Context context, @NonNull final List<Integer> icons, @NonNull List<Integer> colors) {
         final int buttonsCount = Math.min(icons.size(), colors.size());
+        final String[] toolTips = getResources().getStringArray(R.array.tooltips);
         for (int i = 0; i < buttonsCount; i++) {
             final FloatingActionButton button = new FloatingActionButton(context);
             button.setImageResource(icons.get(i));
@@ -314,7 +319,15 @@ public class CircleMenuView extends FrameLayout implements View.OnClickListener 
             button.setScaleX(0);
             button.setScaleY(0);
             button.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
-
+            final int finalI = i;
+            button.setOnLongClickListener(new OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    // TODO Auto-generated method stub
+                    Toast.makeText(context, toolTips[finalI], Toast.LENGTH_SHORT).show();
+                    return true;
+                }
+            });
             addView(button);
             mButtons.add(button);
         }
@@ -402,6 +415,8 @@ public class CircleMenuView extends FrameLayout implements View.OnClickListener 
                 mRingView.setScaleX(1.5f);
                 mRingView.setScaleY(1.5f);
                 mRingView.setVisibility(View.VISIBLE);
+
+                
             }
             @Override
             public void onAnimationEnd(Animator animation) {
@@ -498,13 +513,14 @@ public class CircleMenuView extends FrameLayout implements View.OnClickListener 
             public void onAnimationEnd(Animator animation) {
                 mMenuButton.setRotation(60f);
                 mMenuButton.setImageResource(mIconMenu);
+
             }
         });
 
         final ObjectAnimator angle = ObjectAnimator.ofFloat(mMenuButton, "rotation", 0);
         final ObjectAnimator alpha2 = ObjectAnimator.ofFloat(mMenuButton, "alpha", 1f);
-        final ObjectAnimator scaleX2 = ObjectAnimator.ofFloat(mMenuButton, "scaleX", 1f);
-        final ObjectAnimator scaleY2 = ObjectAnimator.ofFloat(mMenuButton, "scaleY", 1f);
+        final ObjectAnimator scaleX2 = ObjectAnimator.ofFloat(mMenuButton, "scaleX", 1.5f);
+        final ObjectAnimator scaleY2 = ObjectAnimator.ofFloat(mMenuButton, "scaleY", 1.5f);
         final AnimatorSet set2 = new AnimatorSet();
         set2.setInterpolator(new OvershootInterpolator());
         set2.playTogether(angle, alpha2, scaleX2, scaleY2);
