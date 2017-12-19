@@ -19,7 +19,7 @@ public class HomeActivity extends AppCompatActivity {
 
     private String serverIP = "";
     SharedPreferences prefs;
-    Class[] classes = new Class[]{ECGActivity.class, PPGActivity.class};
+    Class[] classes = new Class[]{ECGActivity.class, PPGActivity.class,PPGSingleActivity.class};
 
 
     @Override

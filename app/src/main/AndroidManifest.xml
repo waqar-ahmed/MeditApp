@@ -14,18 +14,19 @@
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         <activity
             android:name=".ECGActivity"
-            android:label="ECG Signal"></activity>
+            android:label="ECG Signal" />
         <activity
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings" />
         <activity android:name=".HomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".PPGActivity">
-        </activity>
+        <activity android:name=".PPGActivity"></activity>
+        <activity android:name=".PPGSingleActivity"></activity>
     </application>
 
 </manifest>

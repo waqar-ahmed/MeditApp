@@ -9,11 +9,14 @@ import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.jakewharton.threetenabp.AndroidThreeTen;
 import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.GridLabelRenderer;
+import com.jjoe64.graphview.LegendRenderer;
 import com.jjoe64.graphview.helper.DateAsXAxisLabelFormatter;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
@@ -39,12 +42,10 @@ public class PPGActivity extends AppCompatActivity {
 
     private Handler mHandler = new Handler();
     private Runnable mTimer1;
-    private LineGraphSeries<DataPoint> mSeries1;
-    private CustomPointsGraphSeries<CustomDataPoint> annotations;
+    private LineGraphSeries<DataPoint> mSeries1, mSeries2, mSeries3, mSeries4;
     private AsyncHttpClient client;
     private RequestParams params;
-    DataPoint[] dataPoints = null;
-    GraphView graph;
+    GraphView ppgGraph1, ppgGraph2, ppgGraph3, ppgGraph4;
     Map<String, String> mapparams;
     TextView tvheartRate;
     SharedPreferences prefs;
@@ -56,7 +57,13 @@ public class PPGActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ppg);
         AndroidThreeTen.init(this);
-        graph = (GraphView) findViewById(R.id.ppg_graph_1);
+
+        ppgGraph1 = (GraphView) findViewById(R.id.ppg_graph_1);
+        ppgGraph2 = (GraphView) findViewById(R.id.ppg_graph_2);
+        ppgGraph3 = (GraphView) findViewById(R.id.ppg_graph_3);
+        ppgGraph4 = (GraphView) findViewById(R.id.ppg_graph_4);
+
+
 
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
@@ -71,13 +78,90 @@ public class PPGActivity extends AppCompatActivity {
         client.setTimeout(20000);
 
         mSeries1 = new LineGraphSeries<>();
+        mSeries2 = new LineGraphSeries<>();
+        mSeries3 = new LineGraphSeries<>();
+        mSeries4 = new LineGraphSeries<>();
 
-        graph.addSeries(mSeries1);
+        mSeries1.setTitle("Channel 1");
+        mSeries2.setTitle("Channel 2");
+        mSeries3.setTitle("Channel 3");
+        mSeries4.setTitle("Channel 4");
+
+        ppgGraph1.getLegendRenderer().setVisible(true);
+        ppgGraph1.getLegendRenderer().setAlign(LegendRenderer.LegendAlign.TOP);
+
+        ppgGraph2.getLegendRenderer().setVisible(true);
+        ppgGraph2.getLegendRenderer().setAlign(LegendRenderer.LegendAlign.TOP);
+
+        ppgGraph3.getLegendRenderer().setVisible(true);
+        ppgGraph3.getLegendRenderer().setAlign(LegendRenderer.LegendAlign.TOP);
+
+        ppgGraph4.getLegendRenderer().setVisible(true);
+        ppgGraph4.getLegendRenderer().setAlign(LegendRenderer.LegendAlign.TOP);
+
+        ppgGraph1.addSeries(mSeries1);
+        ppgGraph2.addSeries(mSeries2);
+        ppgGraph3.addSeries(mSeries3);
+        ppgGraph4.addSeries(mSeries4);
+
+        int padding = 60;
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss");
+
         // set date label formatter
-        graph.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(PPGActivity.this, simpleDateFormat));
-        graph.getGridLabelRenderer().setNumHorizontalLabels(3); // only 4 because of the space
+        ppgGraph1.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(PPGActivity.this, simpleDateFormat));
+        ppgGraph1.getGridLabelRenderer().setNumHorizontalLabels(4); // only 4 because of the space
+
+        GridLabelRenderer glr1 = ppgGraph1.getGridLabelRenderer();
+        glr1.setPadding(padding); // should allow for 3 digits to fit on screen
+
+        ppgGraph2.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(PPGActivity.this, simpleDateFormat));
+        ppgGraph2.getGridLabelRenderer().setNumHorizontalLabels(4); // only 4 because of the space
+
+        GridLabelRenderer glr2 = ppgGraph2.getGridLabelRenderer();
+        glr2.setPadding(padding); // should allow for 3 digits to fit on screen
+
+        ppgGraph3.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(PPGActivity.this, simpleDateFormat));
+        ppgGraph3.getGridLabelRenderer().setNumHorizontalLabels(4); // only 4 because of the space
+
+        GridLabelRenderer glr3 = ppgGraph3.getGridLabelRenderer();
+        glr3.setPadding(padding); // should allow for 3 digits to fit on screen
+
+        ppgGraph4.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(PPGActivity.this, simpleDateFormat));
+        ppgGraph4.getGridLabelRenderer().setNumHorizontalLabels(4); // only 4 because of the space
+
+        GridLabelRenderer glr4 = ppgGraph4.getGridLabelRenderer();
+        glr4.setPadding(padding); // should allow for 3 digits to fit on screen
+
+
+        ppgGraph1.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                // it was the 1st button
+                Toast.makeText(PPGActivity.this, "PPG 1", Toast.LENGTH_SHORT).show();
+            }
+        });
+        ppgGraph2.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                // it was the 1st button
+                Toast.makeText(PPGActivity.this, "PPG 2", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        ppgGraph3.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                // it was the 1st button
+                Toast.makeText(PPGActivity.this, "PPG 3", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        ppgGraph4.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                // it was the 1st button
+                Toast.makeText(PPGActivity.this, "PPG 4", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
     }
 
     @Override
@@ -124,7 +208,10 @@ public class PPGActivity extends AppCompatActivity {
     }
 
     private void processJson(JSONObject response) {
-        DataPoint[] points = null;
+        DataPoint[] points1 = null;
+        DataPoint[] points2 = null;
+        DataPoint[] points3 = null;
+        DataPoint[] points4 = null;
         int index = 0;
         try {
             JSONObject series = response.getJSONArray("results").getJSONObject(0).getJSONArray("series").getJSONObject(0);
@@ -134,32 +221,61 @@ public class PPGActivity extends AppCompatActivity {
             //Columns: ["time","channel_1","channel_2","channel_3","channel_4","host","temperature"]
 
             int len = countChannelValues(values);
-            points = new DataPoint[len];
 
-            boolean isNull = false;
+            points1 = new DataPoint[len];
+            points2 = new DataPoint[len];
+            points3 = new DataPoint[len];
+            points4 = new DataPoint[len];
 
             for(int i=0; i < values.length(); i++){
                 JSONArray x = values.getJSONArray(i);
                 Instant instant = Instant.parse(x.getString(0));
+
                 if(x.getString(1) == "null") {
                     continue;
                 }
 
-                DataPoint v = new DataPoint(instant.toEpochMilli(), x.getInt(1));
-                points[index] = v;
+                DataPoint v = new DataPoint(instant.toEpochMilli(), x.getLong(1));
+                points1[index] = v;
+
+                v = new DataPoint(instant.toEpochMilli(), x.getLong(2)/1000000000);
+                points2[index] = v;
+
+                v = new DataPoint(instant.toEpochMilli(), x.getLong(3)/1000);
+                points3[index] = v;
+
+                v = new DataPoint(instant.toEpochMilli(), x.getLong(4));
+                points4[index] = v;
                 index++;
             }
 
-            graph.getViewport().setMinX(points[0].getX());
-            graph.getViewport().setMaxX(points[len-1].getX());
-            graph.getViewport().setXAxisBoundsManual(true);
+            ppgGraph1.getViewport().setMinX(points1[0].getX());
+            ppgGraph1.getViewport().setMaxX(points1[len-1].getX());
+            ppgGraph1.getViewport().setXAxisBoundsManual(true);
+
+
+            ppgGraph2.getViewport().setMinX(points2[0].getX());
+            ppgGraph2.getViewport().setMaxX(points2[len-1].getX());
+            ppgGraph2.getViewport().setXAxisBoundsManual(true);
+
+            ppgGraph3.getViewport().setMinX(points3[0].getX());
+            ppgGraph3.getViewport().setMaxX(points3[len-1].getX());
+            ppgGraph3.getViewport().setXAxisBoundsManual(true);
+
+            ppgGraph4.getViewport().setMinX(points4[0].getX());
+            ppgGraph4.getViewport().setMaxX(points4[len-1].getX());
+            ppgGraph4.getViewport().setXAxisBoundsManual(true);
+
 
         } catch (JSONException e) {
             e.printStackTrace();
             Toast.makeText(PPGActivity.this, e.getMessage() + ". Make sure the device and database is running.", Toast.LENGTH_SHORT).show();
         }
-        if(points != null){
-            mSeries1.resetData(points);
+        if(points1 != null){
+            mSeries1.resetData(points1);
+            mSeries2.resetData(points2);
+            mSeries3.resetData(points3);
+            mSeries4.resetData(points4);
         }
     }
 
