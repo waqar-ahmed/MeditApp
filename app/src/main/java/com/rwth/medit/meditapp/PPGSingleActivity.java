@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.jakewharton.threetenabp.AndroidThreeTen;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.GridLabelRenderer;
+import com.jjoe64.graphview.LegendRenderer;
 import com.jjoe64.graphview.helper.DateAsXAxisLabelFormatter;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
@@ -49,7 +50,8 @@ public class PPGSingleActivity extends AppCompatActivity {
     TextView tvheartRate;
     SharedPreferences prefs;
     private String serverIP = "";
-
+    private int channel = 1;
+    GridLabelRenderer glr;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +59,12 @@ public class PPGSingleActivity extends AppCompatActivity {
         setContentView(R.layout.activity_ppgsingle);
         AndroidThreeTen.init(this);
         graph = (GraphView) findViewById(R.id.graph);
+
+        //Get the bundle
+        Bundle bundle = getIntent().getExtras();
+        channel = bundle.getInt("channel");
+
+        if(channel == 0) channel = 1;
 
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
@@ -80,8 +88,15 @@ public class PPGSingleActivity extends AppCompatActivity {
         graph.getGridLabelRenderer().setNumHorizontalLabels(4); // only 4 because of the space
         //graph.getGridLabelRenderer().setLabelVerticalWidth(7);
 
-        GridLabelRenderer glr = graph.getGridLabelRenderer();
+        glr = graph.getGridLabelRenderer();
         glr.setPadding(80); // should allow for 3 digits to fit on screen
+
+        if(channel == 2) glr.setPadding(150);
+
+        mSeries1.setTitle("Channel " + channel);
+
+        graph.getLegendRenderer().setVisible(true);
+        graph.getLegendRenderer().setAlign(LegendRenderer.LegendAlign.TOP);
 
     }
 
@@ -155,7 +170,7 @@ public class PPGSingleActivity extends AppCompatActivity {
                 }
 
                 Instant instant = Instant.parse(x.getString(0));
-                DataPoint v = new DataPoint(instant.toEpochMilli(), x.getDouble(2)/1000000);
+                DataPoint v = new DataPoint(instant.toEpochMilli(), x.getLong(channel));
                 points[index] = v;
                 index++;
             }
@@ -178,7 +193,7 @@ public class PPGSingleActivity extends AppCompatActivity {
         int count = 0;
         for(int i=0; i < values.length(); i++) {
             try {
-                if (values.getJSONArray(i).getString(1) != "null") count++;
+                if (values.getJSONArray(i).getString(channel) != "null") count++;
             } catch (JSONException e) {
                 e.printStackTrace();
             }

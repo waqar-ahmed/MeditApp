@@ -1,5 +1,6 @@
 package com.rwth.medit.meditapp;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -137,27 +138,43 @@ public class PPGActivity extends AppCompatActivity {
         ppgGraph1.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // it was the 1st button
-                Toast.makeText(PPGActivity.this, "PPG 1", Toast.LENGTH_SHORT).show();
+                Intent i = new Intent(PPGActivity.this, PPGSingleActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putInt("channel", 1);
+                i.putExtras(bundle);
+                startActivity(i);
             }
         });
         ppgGraph2.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // it was the 1st button
-                Toast.makeText(PPGActivity.this, "PPG 2", Toast.LENGTH_SHORT).show();
+                Intent i = new Intent(PPGActivity.this, PPGSingleActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putInt("channel", 2);
+                i.putExtras(bundle);
+                startActivity(i);
             }
         });
 
         ppgGraph3.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // it was the 1st button
-                Toast.makeText(PPGActivity.this, "PPG 3", Toast.LENGTH_SHORT).show();
+                Intent i = new Intent(PPGActivity.this, PPGSingleActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putInt("channel", 3);
+                i.putExtras(bundle);
+                startActivity(i);
             }
         });
 
         ppgGraph4.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // it was the 1st button
-                Toast.makeText(PPGActivity.this, "PPG 4", Toast.LENGTH_SHORT).show();
+                Intent i = new Intent(PPGActivity.this, PPGSingleActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putInt("channel", 4);
+                i.putExtras(bundle);
+                startActivity(i);
             }
         });
 
@@ -248,6 +265,8 @@ public class PPGActivity extends AppCompatActivity {
                 points4[index] = v;
                 index++;
             }
+
+            if(points1.length == 0) return;
 
             ppgGraph1.getViewport().setMinX(points1[0].getX());
             ppgGraph1.getViewport().setMaxX(points1[len-1].getX());
