@@ -3,4 +3,20 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+
+
+        <!-- for main text color theme RingView -->
+        <color name="red">#D95238</color>
+        <color name="color_333333">#333333</color>
+        <color name="color_666666">#666666</color>
+        <color name="color_999999">#999999</color>
+
+        <color name="heart_default">#E48674</color>
+        <color name="heart_select">#E48674</color>
+
+        <color name="translucent">#10000000</color>
+
+        <color name="rippelColor">#FFFFFF</color>
+        <color name="heartbeat">#EAAD7E</color>
+
 </resources>

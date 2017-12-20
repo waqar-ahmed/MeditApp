@@ -19,16 +19,21 @@
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings" />
         <activity android:name=".HomeActivity">
+
+        </activity>
+        <activity android:name=".PPGActivity" />
+        <activity android:name=".PPGSingleActivity" />
+        <activity android:name=".MIActivity" />
+        <activity android:name=".MISingleActivity" />
+        <activity android:name=".RingViewActivity">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
-        <activity android:name=".PPGActivity" />
-        <activity android:name=".PPGSingleActivity" />
-        <activity android:name=".MIActivity" />
-        <activity android:name=".MISingleActivity"></activity>
     </application>
 
 </manifest>
